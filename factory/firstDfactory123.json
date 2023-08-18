@@ -1,0 +1,9 @@
+{
+	"name": "firstDfactory123",
+	"location": "northeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "956d23cb-35a7-435a-a268-fbb8fa583b88",
+		"tenantId": "042c185f-388b-4670-a146-6c3e3099f1f5"
+	}
+}
