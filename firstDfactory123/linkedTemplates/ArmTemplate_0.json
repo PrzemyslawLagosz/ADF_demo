@@ -21,6 +21,30 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/GitHubPrzemoBranch')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/GitHubTestPipline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1329,81 +1353,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/trigger1_inputCSV')]",
 				"[concat(variables('factoryId'), '/datasets/trigger1_outputCSV')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MoviesCleanFlow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "MoviesCSV",
-								"type": "DatasetReference"
-							},
-							"name": "Movies"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "OutputCSV_dataflow",
-								"type": "DatasetReference"
-							},
-							"name": "MoviesClean"
-						},
-						{
-							"dataset": {
-								"referenceName": "OutputCSV_dataflow",
-								"type": "DatasetReference"
-							},
-							"name": "MoviesByYear"
-						}
-					],
-					"transformations": [
-						{
-							"name": "YearExtraction"
-						},
-						{
-							"name": "MoviesByYearAgregation"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          movieId as string,",
-						"          title as string,",
-						"          genres as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Movies",
-						"Movies derive(Year = toInteger(trim(right(title, 6), '()')),",
-						"          title = toString(left(title, length(title)-6)),",
-						"     partitionBy('hash', 1)) ~> YearExtraction",
-						"YearExtraction aggregate(groupBy(Year),",
-						"     MoviesCount = count(),",
-						"     partitionBy('hash', 1)) ~> MoviesByYearAgregation",
-						"YearExtraction sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['movies-clean.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> MoviesClean",
-						"MoviesByYearAgregation sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['moviesByYear.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> MoviesByYear"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/MoviesCSV')]",
-				"[concat(variables('factoryId'), '/datasets/OutputCSV_dataflow')]"
 			]
 		}
 	]
