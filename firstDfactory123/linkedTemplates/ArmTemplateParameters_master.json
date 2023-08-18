@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "firstDfactory123"
+		},
+		"inputblob_connectionString": {
+			"value": ""
+		},
+		"outputSQL_connectionString": {
+			"value": ""
+		},
+		"new_blob_file_properties_Trigger1_parameters_fileName": {
+			"value": "@triggerBody().fileName"
+		},
+		"new_blob_file_properties_typeProperties_scope": {
+			"value": "/subscriptions/e50591d3-2917-4de1-9e69-7692103e845f/resourceGroups/przemotrain/providers/Microsoft.Storage/storageAccounts/firststorageprzemo"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
